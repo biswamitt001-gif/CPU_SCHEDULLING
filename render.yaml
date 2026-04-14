@@ -1,0 +1,48 @@
+services:
+  # Java Spring Boot Engine
+  - type: web
+    name: schedsim-engine
+    runtime: java
+    buildCommand: ./mvnw clean install -DskipTests
+    startCommand: java -jar target/*.jar
+    rootDir: Backend/java-engine
+    envVars:
+      - key: PORT
+        value: 8080
+
+  # Node.js API Gateway
+  - type: web
+    name: schedsim-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: node index.js
+    rootDir: Backend/node-server
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JAVA_ENGINE_URL
+        fromService:
+          name: schedsim-engine
+          type: web
+          property: host
+        # Note: In Node code, we append /compute if not included, 
+        # but the host property gives something like schedsim-engine.onrender.com.
+        # We need the full URL. Render doesn't easily interpolate fromService into strings in render.yaml.
+        # The Node code handles the default if host is provided.
+
+  # React Frontend (Static Site)
+  - type: static
+    name: schedsim-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    rootDir: Frontend/client
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: schedsim-api
+          type: web
+          property: host
+        # VITE_API_URL needs to be the full URL. 
+        # Better to set it manually in Render dashboard or use a script.
+        # However, for Blueprint, we can try to guess it if we know the host.

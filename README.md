@@ -41,6 +41,12 @@ npm run dev
 ```
 *Runs on http://localhost:5173*
 
+## ☁️ Deployment
+
+For instructions on how to deploy this project to **Render**, please refer to the [**DEPLOYMENT_GUIDE.md**](file:///d:/CPU%20Scheduling/DEPLOYMENT_GUIDE.md).
+
+It includes a `render.yaml` blueprint for easy one-click deployment.
+
 ## 🎨 Features
 - **Dynamic Gantt Chart:** Animated horizontal Gantt chart built with Framer motion.
 - **Performance History:** Saves previous runs to MongoDB and visualizes them on a Recharts bar chart for comparison.
